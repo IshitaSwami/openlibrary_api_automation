@@ -1,0 +1,156 @@
+{
+	"info": {
+		"_postman_id": "0249091d-1c7d-4a8e-b81f-dcb18d495c1b",
+		"name": "openlibrary",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46118184",
+		"_collection_link": "https://ishitaswami-5567857.postman.co/workspace/Ishita-Swami's-Workspace~355e353a-8c2e-4eb3-8917-79a1abc4e47b/collection/46118184-0249091d-1c7d-4a8e-b81f-dcb18d495c1b?action=share&source=collection_link&creator=46118184"
+	},
+	"item": [
+		{
+			"name": "Book Search",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response && pm.response.code === 200) {\r",
+							"    pm.test(\"Status code is 200\", function () {\r",
+							"        pm.expect(pm.response.code).to.eql(200);\r",
+							"    });\r",
+							"\r",
+							"    let jsonData;\r",
+							"    try {\r",
+							"        jsonData = pm.response.json();\r",
+							"    } catch (e) {\r",
+							"        console.error(\"Could not parse response as JSON:\", e);\r",
+							"    }\r",
+							"\r",
+							"    if (jsonData && jsonData.docs) {\r",
+							"        pm.test(\"Results exist\", function () {\r",
+							"            pm.expect(jsonData.docs.length).to.be.above(0);\r",
+							"        });\r",
+							"    } else {\r",
+							"        console.warn(\"No docs found in response.\");\r",
+							"    }\r",
+							"} else {\r",
+							"    console.error(\"Request failed or no response received.\");\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://openlibrary.org/search.json?q={{book_query}}",
+					"protocol": "https",
+					"host": [
+						"openlibrary",
+						"org"
+					],
+					"path": [
+						"search.json"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{book_query}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Book Details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Title exists\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.title).to.exist;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://openlibrary.org/books/{{book_id}}.json",
+					"protocol": "https",
+					"host": [
+						"openlibrary",
+						"org"
+					],
+					"path": [
+						"books",
+						"{{book_id}}.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Author Details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Author name exists\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.exist;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://openlibrary.org/authors/{{author_id}}.json",
+					"protocol": "https",
+					"host": [
+						"openlibrary",
+						"org"
+					],
+					"path": [
+						"authors",
+						"{{author_id}}.json"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
